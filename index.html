@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign Up Today</title>
+    </head>
+    <body>
+        <main>
+            <form onsubmit="">
+                <p id="feedback"></p>
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" name="name"><br>
+                <label for="email">Email:</label><br>
+                <input type="text" id="email" name="email">
+                <button type="submit">Sign Up</button>
+            </form>
+        </main>
+        <script>
+            let form = document.querySelector("form");
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+
+                let body = JSON.stringify({
+                    name: form.children[2].value,
+                    email: form.children[4].value
+                })
+
+                fetch("http://localhost:3000/newsletter_signup", { method: "POST", 
+                headers: { "Content-Type": "application/json" },
+                body, 
+                }) .then((res) => {
+                    if(res.ok) {
+                        name: form.children[2].value = "";
+                        email: form.children[4].value = "";
+                        name: form.children[0].textContent = "thanks for signing up!";
+                    }
+                })
+            })
+        </script>
+    </body>
