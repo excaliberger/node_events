@@ -22,8 +22,10 @@ const server = createServer((req, res) => {
         chunks.push(chunk);
     });
 
-    req.on("end", () => {
+    req.on("end", (event) => {
         if (url === "/newsletter_signup" && method === "POST") {
+            console.log(event);
+
             const body = JSON.parse(Buffer.concat(chunks).toString());
 
             const newContact = `${body.name}, ${body.email}\n`
@@ -33,15 +35,17 @@ const server = createServer((req, res) => {
             res.write(JSON.stringify({ msg: "successfully signed up"}));
             res.end()
         } else if (url === "/newsletter_signup" && method === "GET") {
-            readFile(path.join(_dirname, "./index.html"))
-                if (err) {
+            readFile(path.join(__dirname, "./index.html"), (err, data) => {
+                if (err) { 
                     console.log(err);
                     res.emit("error", err);
                     return;
+                } else {
+                    res.setHeader("Content-Type", "text/html")
+                    res.write(data);
+                    res.end();
                 }
-                res.setHeader("Content-Type", "text/html")
-                res.write(data);
-                res.end();
+            }) 
         } else {
             res.statusCode = 404;
             res.setHeader("Content-Type", "application/json");
@@ -52,20 +56,20 @@ const server = createServer((req, res) => {
 
 server.listen(3000, () => console.log("server listening...") )
 
-NewsLetter.on("signup", (newContact, res) => {
-
+NewsLetter.on("signup", (newContact2, res) => {
+    
     appendFile(
         path.join(__dirname, "assets/newsletter.csv"), 
-            newContact,
-            (err) => {
-                if (err) {
-                    console.log(err);
-                    NewsLetter.emit("error", err, res)
-                    return;
-                }
+        newContact2,
+        (err) => {
+            if (err) {
+                console.log(err);
+                NewsLetter.emit("error", err, res)
+                return;
+            }
                 console.log("the file was updated succesfully")
-            })
-    });
+            });
+        });
 
 NewsLetter.on("error", (err) => {
     console.log(err);

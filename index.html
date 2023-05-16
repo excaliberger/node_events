@@ -8,7 +8,7 @@
     </head>
     <body>
         <main>
-            <form onsubmit="">
+            <form onsubmit="NewsLetter()">
                 <p id="feedback"></p>
                 <label for="name">Name:</label><br>
                 <input type="text" id="name" name="name"><br>
@@ -19,12 +19,13 @@
         </main>
         <script>
             let form = document.querySelector("form");
+
             form.addEventListener("submit", (event) => {
                 event.preventDefault();
 
                 let body = JSON.stringify({
-                    name: form.children[2].value,
-                    email: form.children[4].value
+                    name: form.children[3].value,
+                    email: form.children[7].value
                 })
 
                 fetch("http://localhost:3000/newsletter_signup", { method: "POST", 
@@ -32,9 +33,9 @@
                 body, 
                 }) .then((res) => {
                     if(res.ok) {
-                        name: form.children[2].value = "";
-                        email: form.children[4].value = "";
-                        name: form.children[0].textContent = "thanks for signing up!";
+                        name.value = "";
+                        email.value = "";
+                        title = "thanks for signing up!";
                     }
                 })
             })
