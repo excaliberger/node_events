@@ -28,7 +28,7 @@ const server = createServer((req, res) => {
 
             const body = JSON.parse(Buffer.concat(chunks).toString());
 
-            const newContact = `${body.name}, ${body.email}\n`
+            const newContact = `${body.name}, ${body.email}/n`
             NewsLetter.emit("signup", newContact, res);
 
             res.setHeader("Content-Type", "application/json");
